@@ -5,9 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spell Checker Interface</title>
     <link rel="stylesheet" href="/style.css">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
 
-   
+body {
+    background-color: #fdf5f1;
+}
 
+.container {
+    width: 90%;
+    margin: 30px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.header-new-word
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+}
+.btn {
+    background-color: #ff6e40;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn:active
+{
+    background-color: #ff3c01;
+    transition: 0.1s;
+    transform: scale(1.02);
+}
+#text-insert-nword
+{
+    background-color: #fff2ec;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-right: 10px;
+    height: 45px;
+    resize: none;
+    color: black;
+}
+.page-input {
+    width: 40px;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.text-area textarea {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    border: 1px solid #ffbdbd;
+    border-radius: 5px;
+    background-color: #fff2ec;
+    color: #333;
+    line-height: 1.5em;
+    resize: none; /* Ngăn chặn thay đổi kích thước khung nhập liệu */
+}
+
+.text-area p {
+    color: #333;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+.suggestions {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.suggestions h4 {
+    margin-bottom: 10px;
+}
+
+.suggestions label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.suggestions ul {
+    list-style-type: none;
+}
+
+.suggestion {
+    font-weight: bold;
+    color: #ff6e40;
+}
+
+.error-desc {
+    color: gray;
+    font-style: italic;
+}
+
+.score {
+    font-size: 1.5em;
+    color: #ff6e40;
+    text-align: right;
+}
+
+.suggestions {
+    margin-top: 20px;
+}
+.suggestions ul {
+    list-style-type: none;
+}
+.suggestions li {
+    margin-bottom: 10px;
+}
+.suggestions .mistake-word {
+    font-weight: bold;
+    color: red;
+}
+    </style>
 </head>
 <body>
     <div class="container">
