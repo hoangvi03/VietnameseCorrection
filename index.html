@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spell Checker Interface</title>
+    <link rel="stylesheet" href="/CorrectionTuDien/template/style.css">
+
+   
+
+</head>
+<body>
+    <div class="container">
+
+            <div class="header">
+                <button id="submit-button" type="submit" class="btn">Kiểm tra chính tả</button>
+                <!-- <button class="btn">Hiển thị lỗi</button> --> 
+                <div class="header-new-word">
+                    <textarea  name="text-insert-nword" id="text-insert-nword" placeholder="Lưu từ mới..."></textarea>
+                    <button id="submit-insert-word" class="btn">Lưu</button>
+                </div>
+            </div>
+
+            <div class="text-area">
+                <textarea id="text-input" name="text-input" rows="10" cols="80" placeholder="Nhập văn bản tại đây..."></textarea>
+            </div>
+
+            <div class="suggestions">
+                <h4>Gợi ý chỉnh sửa:</h4>
+                <ul id="suggestion-list">
+                    <!-- Danh sách gợi ý sẽ được cập nhật tại đây -->
+                </ul>
+            </div>
+        <div id="char_count" class="score">
+            
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('submit-button').addEventListener('click', function() {
+            sendTextToFlask();
+        });
+        document.getElementById('submit-insert-word').addEventListener('click', function() {
+            sendTextInsertWord();
+        });
+        //Thêm từ mới vào từ điển
+        function sendTextInsertWord()
+        {
+            const wordInput = document.getElementById('text-insert-nword').value
+            if(!wordInput)
+            {
+                alert("Vui lòng nhập văn bản!");
+                return;
+            }
+            // Gửi request POST tới Flask với dữ liệu JSON
+            fetch('http://127.0.0.1:5000/insert-word', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: wordInput }),  // Đảm bảo gửi dưới dạng JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Kiểm tra nếu có lỗi từ Flask
+                if (data.error) {
+                    console.error("Error from Flask:", data.error);
+                    alert("Lỗi: " + data.error);
+                    return;
+                }
+                else
+                {
+                    alert(data.message)
+                    return
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        //Gửi văn bản đi và nhận về từ sai + từ gợi ý
+        function sendTextToFlask() {
+            const textInput = document.getElementById('text-input').value;
+
+            // Kiểm tra xem textInput có dữ liệu không
+            if (!textInput) {
+                alert("Vui lòng nhập văn bản!");
+                return;
+            }
+
+            // Gửi request POST tới Flask với dữ liệu JSON
+            fetch('http://127.0.0.1:5000/modify-text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: textInput }),  // Đảm bảo gửi dưới dạng JSON
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Kiểm tra nếu có lỗi từ Flask
+                if (data.error) {
+                    console.error("Error from Flask:", data.error);
+                    alert("Lỗi: " + data.error);
+                    return;
+                }
+
+                // Xử lý dữ liệu trả về từ Flask
+                const suggestionList = document.getElementById('suggestion-list');
+                suggestionList.innerHTML = ''; // Xóa danh sách cũ
+
+                // Hiển thị các từ sai và gợi ý sửa
+                data.mistakes.forEach(mistake => {
+                    const listItem = document.createElement('li');
+                    const suggestions = mistake.suggestions.join(', ');
+                    listItem.innerHTML = `
+                        <span class="mistake-word">${mistake.word}</span> → ${suggestions}
+                    `;
+                    suggestionList.appendChild(listItem);
+                });
+                document.getElementById("char_count").innerHTML = `<span>${data.char_count} ký tự</span>`;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
